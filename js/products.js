@@ -1,5 +1,5 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
-import pagination from './pagination';
+import pagination from './pagination.js';
 
 
 
@@ -57,7 +57,7 @@ checkLogin() {
 },
 
 //左方列表取出
-getProducts(page = 2) {//query參數預設值要友直不然會undefined
+getProducts(page = 1) {//query參數預設值要友直不然會undefined
 
 const url = `${site}/api/${api_path}/admin/products/?page=${page}`;
 axios.get(url)
