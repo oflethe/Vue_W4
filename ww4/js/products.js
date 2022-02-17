@@ -1,5 +1,6 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
-import pagination from './pagination.js';
+import pagination from './pagination';
+
 
 
 const site ='https://vue3-course-api.hexschool.io/v2' ;
@@ -11,9 +12,10 @@ let delProductModal={};
 
 const app = createApp({
 
-    //區域註冊
-components: {
+components:{
+
     pagination
+
 },
 
 data(){
@@ -24,11 +26,11 @@ return{
    //點選查看細節時將產品暫存到此
    tempProducts : {
        imagesUrl:[],
-    },
-
-   isNew: false,//新增一個變數判斷是否為新增產品，若是新增就跳到新增產品的方法，否則則就跳另一個方法
-   pagination: {},
-     }
+   },
+//新增一個變數判斷是否為新增產品，若是新增就跳到新增產品的方法，否則則就跳另一個方法
+   isNew: false,
+   pagination:{},
+}
 
 },
 
@@ -55,18 +57,17 @@ checkLogin() {
 },
 
 //左方列表取出
-getProducts(page = 1) {//參數預設值
+getProducts(page = 2) {//query參數預設值要友直不然會undefined
 
 const url = `${site}/api/${api_path}/admin/products/?page=${page}`;
 axios.get(url)
     .then( res=> {
         this.products = res.data.products;
         this.pagination = res.data.pagination;
-
         
     });
    
-},
+},console.log(pagination[]);
 // 這裡是打開modal的功能，依照狀態(新增或是編輯原有產品)，另外再判斷是否有帶入當前產品去判斷是新增產品還是編輯原有產品或是刪除產品
 openModal(status, product){
 console.log(status, product );
@@ -161,28 +162,5 @@ delProductModal = new bootstrap.Modal(document.getElementById('delProductModal')
 
 
 });
-
-app.component ('productModal',{
-props:['tempProducts'],
-templates: '#templateForProductModal',
-methods:{
-    updateProduct(){
-        let url =`${site}/api/${api_path}/admin/product`;
-        let method = 'post';
-        if(!this.isNew){
-            url = `${site}/api/${api_path}/admin/product/${this.tempProducts.id}`;
-            method = 'put';
-
-    axios [method](url,{data:this.tempProducts})
-    .then ( res => {
-        console.log(res);
-        this.$emit('get-products')
-        productModal.hide();
-    });
-        }
-    },
-}
-})
-
 
 app.mount('#app');
