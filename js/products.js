@@ -67,6 +67,7 @@ axios.get(url)
     });
    
 },
+
 // 這裡是打開modal的功能，依照狀態(新增或是編輯原有產品)，另外再判斷是否有帶入當前產品去判斷是新增產品還是編輯原有產品或是刪除產品
 openModal(status, product){
 console.log(status, product );
