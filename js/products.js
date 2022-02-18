@@ -164,7 +164,7 @@ delProductModal = new bootstrap.Modal(document.getElementById('delProductModal')
 
 app.component ('productModal',{
 props:['tempProducts'],
-templates: '#templateForProductModal',
+template: '#templateForProductModal',
 methods:{
     updateProduct(){
         let url =`${site}/api/${api_path}/admin/product`;
