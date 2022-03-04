@@ -76,9 +76,11 @@
             <!-- Modal -->
     <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel"
                  aria-hidden="true">
-            <product-modal :temp-products="tempProducts">
-
-            </product-modal>
+                 <product-modal
+                 :temp-products="tempProducts"
+                 v-on:get-products="getProducts"
+                 :is-new="isNew"
+                         ></product-modal>
 
 
 
@@ -149,7 +151,7 @@
 
                     <template v-for="(img,key) in tempProducts.imagesUrl" :key="key+'oooofffffflllleee'">
 
-                        <input type="text" class="form-control"v-model="tempProducts.imagesUrl[key]">
+                        <input type="text" class="form-control" v-model="tempProducts.imagesUrl[key]">
                         <img class="img-fluid" :src="tempProducts.imagesUrl[key]" alt="" >
 
                     </template>

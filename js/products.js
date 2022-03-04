@@ -69,7 +69,7 @@ axios.get(url)
 },
 // 這裡是打開modal的功能，依照狀態(新增或是編輯原有產品)，另外再判斷是否有帶入當前產品去判斷是新增產品還是編輯原有產品或是刪除產品
 openModal(status, product){
-console.log(status, product );
+
 
 if (status === 'isNew'){
 //由於是新增的狀態，因此設定此處的tempProducts圖片是一個空陣列
@@ -83,12 +83,6 @@ this.isNew =true;
 }else if (status === 'edit'){
     this.tempProducts = { ...product }; 
     //先把指向該物件的，做JS淺拷貝(有些深層圖片或內容淺拷貝會受到影響)
-
-     //問題點：有點不太確定是否是因為在html那邊撰寫的區塊因為js報錯，在物件屬性後方加上了?讓物件轉為undefined的狀況導致的 ，目前還不太了解為什麼沒有定義到該屬性，導致一開始跳出編輯視窗會有空白報錯，接著是沒有定義讓物件變成undefined狀態導致沒有辦法在編輯狀態新增圖片
-     
-    /*有跳出UNDEFINEDE錯誤，原因是因為沒有定義imagesUrl的屬性，導致系統讀取的時候發現沒有該屬性，因此跳出undefined錯誤，並且導致modal編輯產品視窗內的品項無法新增圖片，助教建議加上此行。
-    此行為三元運算子，是［條件?(判斷) 值1:值2，若判斷為ture則傳回值1，否則回傳值2］
-    理解的意思為 edit區域內的暫存區圖片如果確定為有值(ture)，則會回傳該屬性的原本值，否則會回傳定義他為一個陣列*/
    
     this.tempProducts.imagesUrl = this.tempProducts.imagesUrl ? this.tempProducts.imagesUrl : []
     productModal.show();
@@ -97,7 +91,7 @@ this.isNew =true;
 //判斷為刪除狀態
 }else if (status === 'delete'){
     delProductModal.show();
-    this.tempProducts = { ...product}; //把品項也帶過來，刪除的時候就可以在提示視窗中帶入產品名稱||先把指向該物件的，做JS淺拷貝(有些深層圖片或內容淺拷貝會受到影響)
+    this.tempProducts = { ...product}; //把品項也帶過來，刪除的時候就可以在提示視窗中帶入產品名稱||
 
 }
 
@@ -125,7 +119,7 @@ if (!this.isNew){//跟73~83行呼應
 axios[method](url, { data: this.tempProducts})
     .then( res=> {
       
-        console.log(res);
+        
         this.getProducts();
         productModal.hide();
     });
@@ -163,25 +157,42 @@ delProductModal = new bootstrap.Modal(document.getElementById('delProductModal')
 });
 
 app.component ('productModal',{
-props:['tempProducts'],
+props:['tempProducts','isNew'],
 template: '#templateForProductModal',
+
+data(){
+    return{
+        apiUrl:  'https://vue3-course-api.hexschool.io/v2',
+        apiPath: 'oflethe',
+
+
+
+    }
+},
+
 methods:{
     updateProduct(){
-        let url =`${site}/api/${api_path}/admin/product`;
+        let url =`${this.apiUrl}/api/${this.apiPath}/admin/product`;
         let method = 'post';
-        if(!this.isNew){
-            url = `${site}/api/${api_path}/admin/product/${this.tempProducts.id}`;
-            method = 'put';
+      
+        if(!this.isNew){//如果不是新增就替換url跟method
+            url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProducts.id}`;
+            method = 'put';}
 
     axios [method](url,{data:this.tempProducts})
     .then ( res => {
-        console.log(res);
+        //顯示已建立產品
+        alert(res.data.message);
+        //重新取的新資料並渲染
         this.$emit('get-products')
         productModal.hide();
-    });
-        }
+    })
+    .catch((err)=> {
+        alert(err.data.message);
+    })
+        },
     },
-}
+
 })
 
 
